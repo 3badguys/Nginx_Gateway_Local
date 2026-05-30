@@ -1,0 +1,13 @@
+# FRP Client config — edit serverAddr & auth.token to match your FRP server
+serverAddr = "your-frp-server.com"
+serverPort = 7000
+
+auth.method = "token"
+auth.token = "your-token-here"
+
+[[proxies]]
+name = "nginx-gateway"
+type = "http"
+localIP = "nginx-gateway"
+localPort = 80
+customDomains = ["your-domain.com"]
