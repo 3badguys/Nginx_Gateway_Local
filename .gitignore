@@ -1,3 +1,9 @@
+# Environment (contains secrets)
+.env
+
+# Generated config (from .env + template)
+frpc.toml
+
 # Nginx logs
 logs/
 

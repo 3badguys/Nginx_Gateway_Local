@@ -1,28 +1,83 @@
 # Nginx Gateway Local
 
-通过子路径代理多个服务，含 frp 内网穿透支持
+Nginx 反向代理网关，通过子路径分发请求到后端服务，内置 frp 内网穿透支持。
+
+## 前置条件
+
+- [Docker](https://docs.docker.com/get-docker/)
+- 后端服务已加入 `shared_gateway_net` 网络
 
 ## 快速开始
 
 ```bash
-npm run start       # 启动
-npm run stop        # 停止
-npm run logs        # 查看日志
+# 1. 首次：创建 .env 并填入真实值
+cp .env.example .env
+
+# 2. 生成 frpc.toml
+npm run setup
+
+# 3. 启动
+npm run start
+
+# 4. 查看日志
+npm run logs
 ```
 
-## 前置条件
+## 配置
 
-主项目已通过 `npm run start` 启动，并加入 `shared_gateway_net`。
+复制 `.env.example` 为 `.env`，编辑以下变量：
 
-## FRP 穿透配置
+| 变量 | 说明 | 示例 |
+|---|---|---|
+| `FRP_SERVER_ADDR` | FRP 服务器地址 | `frp.example.com` |
+| `FRP_SERVER_PORT` | FRP 服务器端口 | `7000` |
+| `FRP_AUTH_TOKEN` | FRP 认证令牌 | `your-token-here` |
+| `FRP_CUSTOM_DOMAINS` | 自定义域名 | `"example.com", "www.example.com"` |
 
-编辑 `frpc.toml`，填入 FRP 服务器信息：
+然后运行 `npm run setup` 生成 `frpc.toml`。
 
-```toml
-serverAddr = "your-frp-server.com"
-serverPort = 7000
-auth.token = "your-token-here"
-customDomains = ["your-domain.com"]
+## 路由
+
+| 路径 | 行为 |
+|---|---|
+| `/gfs/` | 反代到 `skateboard-frontend:80`（剥离 `/gfs` 前缀） |
+| `/` | 返回 `404 {"error": "Not Found"}` |
+
+> 如需添加新路径，编辑 `nginx.conf` 添加 `location` 块。
+
+## 脚本
+
+| 命令 | 说明 |
+|---|---|
+| `npm run setup` | 从 `.env` 生成 `frpc.toml` |
+| `npm run start` | 启动所有服务 |
+| `npm run stop` | 停止所有服务 |
+| `npm run restart` | 重启所有服务 |
+| `npm run logs` | 查看日志 |
+
+## 关闭 FRP 穿透
+
+不需要内网穿透时：
+
+```bash
+docker compose up -d nginx-gateway     # 仅启动 nginx
 ```
 
-不需要穿透时直接删除或注释掉 docker-compose.yml 中的 `frpc` 服务。
+或者直接注释/删除 `docker-compose.yml` 中的 `frpc` 服务。
+
+## 文件结构
+
+```
+├── .env.example          # 环境变量模板
+├── .env                  # 真实配置（不提交）
+├── .gitignore
+├── nginx.conf            # Nginx 反向代理配置
+├── logs/                 # Nginx 日志（不提交）
+│   ├── access.log
+│   └── error.log
+├── frpc.toml.template    # FRP 配置模板
+├── frpc.toml             # 生成的 FRP 配置（不提交）
+├── setup.mjs             # 配置生成脚本（跨平台）
+├── docker-compose.yml
+├── package.json
+```

@@ -1,0 +1,13 @@
+# FRP Client config — generated from .env, do not edit directly
+serverAddr = "${FRP_SERVER_ADDR}"
+serverPort = ${FRP_SERVER_PORT}
+
+auth.method = "token"
+auth.token = "${FRP_AUTH_TOKEN}"
+
+[[proxies]]
+name = "nginx-gateway"
+type = "http"
+localIP = "nginx-gateway"
+localPort = 80
+customDomains = [${FRP_CUSTOM_DOMAINS}]
