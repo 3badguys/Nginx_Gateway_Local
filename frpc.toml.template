@@ -5,6 +5,11 @@ serverPort = ${FRP_SERVER_PORT}
 auth.method = "token"
 auth.token = "${FRP_AUTH_TOKEN}"
 
+# Enable TLS encryption between frpc and frps (global)
+transport.tls.enable = true
+# Uncomment if server uses a self-signed cert (not recommended)
+# transport.tls.disableCustomTLSFirstByte = true
+
 [[proxies]]
 name = "nginx-gateway"
 type = "http"
