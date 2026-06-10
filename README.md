@@ -4,7 +4,7 @@ Nginx 反向代理网关，通过子路径分发请求到后端服务，内置 f
 
 ## 前置条件
 
-- [Docker](https://docs.docker.com/get-docker/)
+- Docker
 - 后端服务已加入 `shared_gateway_net` 网络
 
 ## 快速开始
@@ -40,8 +40,25 @@ npm run logs
 
 | 路径 | 行为 |
 |---|---|
-| `/gfs/` | 反代到 `skateboard-frontend:80`（剥离 `/gfs` 前缀） |
+| `/frpc/gfs/` | 反代到 `skateboard-frontend`，支持 Dev / Prod 切换 |
 | `/` | 返回 `404 {"error": "Not Found"}` |
+
+### `/frpc/gfs/` 环境切换
+
+`nginx.conf` 中预留两行 `proxy_pass`，按环境注释/启用：
+
+```nginx
+# Dev — Vite HMR，不剥离前缀（Vite 开发服务器端口 5173）
+proxy_pass http://skateboard-frontend:5173;
+
+# Prod — 构建产物，剥离 /frpc/gfs/ 前缀（生产端口 80）
+# proxy_pass http://skateboard-frontend:80/;
+```
+
+| 环境 | 端口 | 剥离前缀 | 说明 |
+|---|---|---|---|
+| Dev | `:5173` | 否 | Vite HMR 需要完整路径 |
+| Prod | `:80` | 是 | 构建产物从根路径 `/` 提供服务 |
 
 > 如需添加新路径，编辑 `nginx.conf` 添加 `location` 块。
 
