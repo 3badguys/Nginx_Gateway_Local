@@ -13,6 +13,13 @@ transport.tls.enable = true
 [[proxies]]
 name = "nginx-gateway"
 type = "http"
-localIP = "nginx-gateway"
+localIP = "127.0.0.1"
 localPort = 80
 customDomains = [${FRP_CUSTOM_DOMAINS}]
+
+[[proxies]]
+name = "pi-ssh"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 22
+remotePort = 6022

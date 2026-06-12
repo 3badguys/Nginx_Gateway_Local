@@ -14,11 +14,12 @@ services:
   frpc:
     image: snowdreamtech/frpc:latest
     container_name: frpc
+    network_mode: host
     restart: unless-stopped
     volumes:
       - ./frpc.toml:/etc/frp/frpc.toml:ro
-    networks:
-      - shared_gateway_net
+    # networks:
+    #   - shared_gateway_net
     depends_on:
       - nginx-gateway
 
