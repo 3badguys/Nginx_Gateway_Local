@@ -5,10 +5,16 @@ serverPort = ${FRP_SERVER_PORT}
 auth.method = "token"
 auth.token = "${FRP_AUTH_TOKEN}"
 
-# Enable TLS encryption between frpc and frps (global)
-transport.tls.enable = true
-# Uncomment if server uses a self-signed cert (not recommended)
-# transport.tls.disableCustomTLSFirstByte = true
+# Transport layer heartbeat and multiplexing configuration
+[transport]
+# Global connection timeout (seconds)
+dialServerTimeout = 30
+# Heartbeat interval (seconds)
+heartbeatInterval = 30
+# Heartbeat timeout (seconds), must be greater than heartbeatInterval
+heartbeatTimeout = 60
+# Enable TCP multiplexing to reduce connection overhead
+tcpMux = true
 
 [[proxies]]
 name = "nginx-gateway"
@@ -16,10 +22,3 @@ type = "http"
 localIP = "127.0.0.1"
 localPort = 80
 customDomains = [${FRP_CUSTOM_DOMAINS}]
-
-[[proxies]]
-name = "pi-ssh"
-type = "tcp"
-localIP = "127.0.0.1"
-localPort = 22
-remotePort = 6022
