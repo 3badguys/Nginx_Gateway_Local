@@ -42,11 +42,13 @@ server {
 
     # ---- /frpc/gfs/ — skateboard frontend ----
     location /frpc/gfs/ {
-        # Dev — Vite HMR, keep prefix intact
-        proxy_pass http://skateboard-frontend:5173;
+        # # Dev — Vite HMR, keep prefix intact
+        # proxy_pass http://skateboard-frontend:5173;
 
-        # Prod — built files, strip /frpc/gfs/ prefix
-        # proxy_pass http://skateboard-frontend:80/;
+        # # Prod — built files, strip /frpc/gfs/ prefix
+        # # proxy_pass http://skateboard-frontend:80/;
+
+        proxy_pass http://host.docker.internal:5173;
     }
 
     # ---- / — default: 404 ----
