@@ -38,7 +38,7 @@ error_log  /var/log/nginx/error.log warn;
 # ==============================================
 server {
     listen       80;
-    server_name  localhost;
+    server_name  ${FRP_SERVER_ADDR};
 
     # ---- /frpc/gfs/ — skateboard frontend ----
     location /frpc/gfs/ {
@@ -54,4 +54,24 @@ server {
         default_type application/json;
         return 404 '{"error": "Not Found"}';
     }
+}
+
+server {
+    listen       80;
+    server_name  zenportal.${FRP_SERVER_ADDR};
+
+    location / {
+        proxy_pass http://host.docker.internal:5174/;
+    }
+}
+
+# ==============================================
+# Default — catch-all
+# ==============================================
+server {
+    listen       80 default_server;
+    server_name  _;
+
+    default_type application/json;
+    return 404 '{"error": "Not Found"}';
 }

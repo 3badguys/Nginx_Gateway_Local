@@ -33,7 +33,6 @@ npm run logs
 | `FRP_SERVER_ADDR` | FRP 服务器地址 | `frp.example.com` |
 | `FRP_SERVER_PORT` | FRP 服务器端口 | `7000` |
 | `FRP_AUTH_TOKEN` | FRP 认证令牌 | `your-token-here` |
-| `FRP_CUSTOM_DOMAINS` | 自定义域名 | `"example.com", "www.example.com"` |
 
 然后运行 `npm run setup` 生成 `frpc.toml`。
 
@@ -61,7 +60,7 @@ proxy_pass http://skateboard-frontend:5173;
 | Dev | `:5173` | 否 | Vite HMR 需要完整路径 |
 | Prod | `:80` | 是 | 构建产物从根路径 `/` 提供服务 |
 
-> 如需添加新路径，编辑 `nginx.conf` 添加 `location` 块。
+> 如需添加新路径，编辑 `nginx.conf.template` 添加 `location` 块，然后重跑 `npm run setup`。
 
 ## 脚本
 
@@ -89,7 +88,8 @@ docker compose up -d nginx-gateway     # 仅启动 nginx
 ├── .env.example          # 环境变量模板
 ├── .env                  # 真实配置（不提交）
 ├── .gitignore
-├── nginx.conf            # Nginx 反向代理配置
+├── nginx.conf.template   # Nginx 配置模板
+├── nginx.conf            # 生成的 Nginx 配置（不提交）
 ├── logs/                 # Nginx 日志（不提交）
 │   ├── access.log
 │   └── error.log

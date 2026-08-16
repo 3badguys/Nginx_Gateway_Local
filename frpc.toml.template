@@ -21,4 +21,11 @@ name = "nginx-gateway"
 type = "http"
 localIP = "127.0.0.1"
 localPort = 80
-customDomains = [${FRP_CUSTOM_DOMAINS}]
+customDomains = ["${FRP_SERVER_ADDR}"]
+
+[[proxies]]
+name = "zenportal"
+type = "http"
+localIP = "127.0.0.1"
+localPort = 80
+subdomain = "zenportal"

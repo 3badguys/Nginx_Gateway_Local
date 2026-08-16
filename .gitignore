@@ -3,6 +3,7 @@
 
 # Generated config (from .env + template)
 frpc.toml
+nginx.conf
 
 # Nginx logs
 logs/
@@ -13,6 +14,7 @@ docker-compose.override.yml
 # IDE
 .vscode/
 .idea/
+.codebase-index/
 
 # OS
 .DS_Store
